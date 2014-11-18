@@ -17,15 +17,14 @@ void threadFunction(MyContainer< int > &cont, size_t id)
 {
 	while (true)
 	{
+		std::this_thread::sleep_for( std::chrono::milliseconds( id * 10 + rand() % 100));	// depends on id
+		
 		int item = rand() % 1000;
 		MyElement< int > el(id, item);
 
-		mymutex.lock();		
+		std::lock_guard< std::mutex > locker( mymutex );
 		cont.add(el);
-		mymutex.unlock();
-				
-		std::this_thread::sleep_for( std::chrono::milliseconds( id * 10 + rand() % 100));	// depends on id
-
+		
 		if (stopAll)
 			return;
 	}
